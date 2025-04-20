@@ -142,13 +142,16 @@ impl SimpleComponent for App {
             TypedGridView::new();
 
         // Add a filter and disable it
-        grid_view_wrapper.add_filter(|item| item.value % 2 == 0);
+        grid_view_wrapper.add_filter(|item| item.name  == "smile");
         grid_view_wrapper.set_filter_status(0, false);
+        grid_view_wrapper.append(MyGridItem::new(0, "🍓", "strawberry"));
 
         let model = App {
             counter,
             grid_view_wrapper,
         };
+
+
 
         let my_view = &model.grid_view_wrapper.view;
 
@@ -163,7 +166,7 @@ impl SimpleComponent for App {
                 // Add 10 items
                 for _ in 0..10 {
                     self.counter = self.counter.wrapping_add(1);
-                    self.grid_view_wrapper.append(MyGridItem::new(self.counter, "😄", "simle"));
+                    self.grid_view_wrapper.append(MyGridItem::new(self.counter, "😄", "smile"));
                 }
 
                 // self.grid_view_wrapper
