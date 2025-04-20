@@ -14,9 +14,9 @@ struct MyGridItem {
 }
 
 impl MyGridItem {
-    fn new(value: u8) -> Self {
+    fn new(value: u8, emoji: &str) -> Self {
         Self {
-            emoji: String::from("😄"),
+            emoji: emoji.to_owned(),
             value,
             binding: U8Binding::new(0),
         }
@@ -175,7 +175,7 @@ impl SimpleComponent for App {
                 // Add 10 items
                 for _ in 0..10 {
                     self.counter = self.counter.wrapping_add(1);
-                    self.grid_view_wrapper.append(MyGridItem::new(self.counter));
+                    self.grid_view_wrapper.append(MyGridItem::new(self.counter, "😄"));
                 }
 
                 // self.grid_view_wrapper
