@@ -3,7 +3,6 @@ use relm4::{
     binding::{Binding, U8Binding},
     prelude::*,
     typed_view::grid::{RelmGridItem, TypedGridView},
-    RelmObjectExt,
 };
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -26,7 +25,6 @@ impl MyGridItem {
 struct Widgets {
     emoji_button: gtk::Button,
     label: gtk::Label,
-    label2: gtk::Label,
     button: gtk::CheckButton,
 }
 
@@ -53,9 +51,6 @@ impl RelmGridItem for MyGridItem {
                 #[name = "label"]
                 gtk::Label,
 
-                #[name = "label2"]
-                gtk::Label,
-
                 #[name = "button"]
                 gtk::CheckButton,
             }
@@ -64,7 +59,6 @@ impl RelmGridItem for MyGridItem {
         let widgets = Widgets {
             emoji_button,
             label,
-            label2,
             button,
         };
 
@@ -75,13 +69,11 @@ impl RelmGridItem for MyGridItem {
         let Widgets {
             emoji_button,
             label,
-            label2,
             button,
         } = widgets;
 
         emoji_button.set_label(&self.emoji);
         label.set_label(&format!("Value: {} ", self.value));
-        label2.add_write_only_binding(&self.binding, "label");
         button.set_active(self.value % 2 == 0);
     }
 }
