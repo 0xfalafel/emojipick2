@@ -10,14 +10,16 @@ struct MyGridItem {
     emoji: String,
     value: u8,
     binding: U8Binding,
+    name: String,
 }
 
 impl MyGridItem {
-    fn new(value: u8, emoji: &str) -> Self {
+    fn new(value: u8, emoji: &str, emoji_name: &str) -> Self {
         Self {
             emoji: emoji.to_owned(),
             value,
             binding: U8Binding::new(0),
+            name: String::from(emoji_name),
         }
     }
 }
@@ -25,7 +27,6 @@ impl MyGridItem {
 struct Widgets {
     emoji_button: gtk::Button,
     label: gtk::Label,
-    button: gtk::CheckButton,
 }
 
 impl Drop for Widgets {
@@ -50,16 +51,12 @@ impl RelmGridItem for MyGridItem {
 
                 #[name = "label"]
                 gtk::Label,
-
-                #[name = "button"]
-                gtk::CheckButton,
             }
         }
 
         let widgets = Widgets {
             emoji_button,
             label,
-            button,
         };
 
         (my_box, widgets)
@@ -69,12 +66,11 @@ impl RelmGridItem for MyGridItem {
         let Widgets {
             emoji_button,
             label,
-            button,
         } = widgets;
 
         emoji_button.set_label(&self.emoji);
+        emoji_button.set_tooltip_text(Some(&self.name));
         label.set_label(&format!("Value: {} ", self.value));
-        button.set_active(self.value % 2 == 0);
     }
 }
 
@@ -167,7 +163,7 @@ impl SimpleComponent for App {
                 // Add 10 items
                 for _ in 0..10 {
                     self.counter = self.counter.wrapping_add(1);
-                    self.grid_view_wrapper.append(MyGridItem::new(self.counter, "😄"));
+                    self.grid_view_wrapper.append(MyGridItem::new(self.counter, "😄", "simle"));
                 }
 
                 // self.grid_view_wrapper
