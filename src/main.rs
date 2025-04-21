@@ -5,23 +5,13 @@ use relm4::{
     typed_view::grid::{RelmGridItem, TypedGridView},
 };
 use serde::Deserialize;
-
-mod emoji_list;
+use std::collections::HashMap;
 
 #[derive(Deserialize)]
 struct Emoji {
     symbol: String,
     name: String,
 }
-
-#[derive(Deserialize)]
-struct EmojiCategories {
-    smiley_and_people: Vec<Emoji>,
-    food_and_drink: Vec<Emoji>,
-    animal_and_nature: Vec<Emoji>,
-}
-
-
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct MyGridItem {
@@ -205,22 +195,15 @@ fn main() {
     // Include the JSON data as a static string
     const EMOJIS_JSON: &str = include_str!("emojis.json");
 
-    // Parse the JSON data into an EmojiCategories struct
-    let categories: EmojiCategories = serde_json::from_str(EMOJIS_JSON).unwrap();
+    // Parse the JSON data into a HashMap
+    let categories: HashMap<String, Vec<Emoji>> = serde_json::from_str(EMOJIS_JSON).unwrap();
 
-    println!("Smiley and People:");
-    for emoji in categories.smiley_and_people {
-        println!("  Symbol: {}, Name: {}", emoji.symbol, emoji.name);
-    }
-
-    println!("Food and Drink:");
-    for emoji in categories.food_and_drink {
-        println!("  Symbol: {}, Name: {}", emoji.symbol, emoji.name);
-    }
-
-    println!("Animal and Nature:");
-    for emoji in categories.animal_and_nature {
-        println!("  Symbol: {}, Name: {}", emoji.symbol, emoji.name);
+    // Print the emojis grouped by category
+    for (category, emojis) in &categories {
+        println!("Category: {}", category);
+        for emoji in emojis {
+            println!("  Symbol: {}, Name: {}", emoji.symbol, emoji.name);
+        }
     }
 
     let app = RelmApp::new("relm4.example.typed-grid-view");
