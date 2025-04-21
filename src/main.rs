@@ -31,13 +31,6 @@ impl MyGridItem {
 
 struct Widgets {
     emoji_button: gtk::Button,
-    label: gtk::Label,
-}
-
-impl Drop for Widgets {
-    fn drop(&mut self) {
-        dbg!(self.label.label());
-    }
 }
 
 impl RelmGridItem for MyGridItem {
@@ -55,15 +48,11 @@ impl RelmGridItem for MyGridItem {
                 gtk::Button {
                     add_css_class: "flat",
                 },
-
-                #[name = "label"]
-                gtk::Label,
             }
         }
 
         let widgets = Widgets {
             emoji_button,
-            label,
         };
 
         (my_box, widgets)
@@ -72,12 +61,10 @@ impl RelmGridItem for MyGridItem {
     fn bind(&mut self, widgets: &mut Self::Widgets, _root: &mut Self::Root) {
         let Widgets {
             emoji_button,
-            label,
         } = widgets;
 
         emoji_button.set_label(&self.emoji);
         emoji_button.set_tooltip_text(Some(&self.name));
-        label.set_label(&format!("Value: {} ", self.value));
     }
 }
 
@@ -126,7 +113,7 @@ impl SimpleComponent for App {
                     #[local_ref]
                     my_view -> gtk::GridView {
                         set_orientation: gtk::Orientation::Vertical,
-                        set_max_columns: 3,
+                        set_max_columns: 10,
                     }
                 }
             }
