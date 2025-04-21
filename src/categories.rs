@@ -12,11 +12,27 @@ pub struct EmojiCollection {
     grid_view_wrapper: TypedGridView<Emoji, gtk::SingleSelection>,
 }
 
-#[relm4::component]
-impl SimpleComponent for EmojiCollection {
+#[relm4::factory]
+impl FactoryComponent for EmojiCollection {
     type Init = (String, Vec<Emoji>);
     type Input = Msg;
     type Output = ();
+    type CommandOutput = ();
+    type ParentWidget = gtk::Box;
+
+    fn init_model(init: Self::Init) -> Self {
+        let (category, emojis) = init;
+        let mut grid_view_wrapper: TypedGridView<Emoji, gtk::SingleSelection> = TypedGridView::new();
+        grid_view_wrapper.add_filter(|item| item.name == "smile");
+        grid_view_wrapper.set_filter_status(0, false);
+        for emoji in emojis {
+            grid_view_wrapper.append(Emoji::new(&emoji.symbol, &emoji.name));
+        }
+        Self {
+            category,
+            grid_view_wrapper,
+        }
+    }
 
     view! {
         gtk::Box {
@@ -39,7 +55,7 @@ impl SimpleComponent for EmojiCollection {
     fn init(
         emoji_collection: Self::Init,
         root: Self::Root,
-        sender: ComponentSender<Self>,
+        _sender: ComponentSender<Self>,
     ) -> ComponentParts<Self> {
         
         // Initialize the GridView wrapper
