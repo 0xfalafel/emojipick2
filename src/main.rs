@@ -84,7 +84,6 @@ struct App {
 #[derive(Debug)]
 enum Msg {
     Append,
-    Remove,
     OnlyShowEven(bool),
 }
 
@@ -107,11 +106,6 @@ impl SimpleComponent for App {
                 gtk::Button {
                     set_label: "Append 10 items",
                     connect_clicked => Msg::Append,
-                },
-
-                gtk::Button {
-                    set_label: "Remove second item",
-                    connect_clicked => Msg::Remove,
                 },
 
                 gtk::ToggleButton {
@@ -180,10 +174,6 @@ impl SimpleComponent for App {
                 let first_binding = &mut first_item.borrow_mut().binding;
                 let mut guard = first_binding.guard();
                 *guard += 1;
-            }
-            Msg::Remove => {
-                // Remove the second item
-                self.grid_view_wrapper.remove(1);
             }
             Msg::OnlyShowEven(show_only_even) => {
                 // Disable or enable the first filter
