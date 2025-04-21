@@ -22,11 +22,12 @@ impl MyGridItem {
     fn new(emoji: &str, emoji_name: &str) -> Self {
         Self {
             emoji: emoji.to_owned(),
-            name: String::from(emoji_name),
+            name: emoji_name.to_owned(),
         }
     }
 }
 
+#[derive(Debug)]
 struct Widgets {
     emoji_button: gtk::Button,
 }
@@ -57,12 +58,8 @@ impl RelmGridItem for MyGridItem {
     }
 
     fn bind(&mut self, widgets: &mut Self::Widgets, _root: &mut Self::Root) {
-        let Widgets {
-            emoji_button,
-        } = widgets;
-
-        emoji_button.set_label(&self.emoji);
-        emoji_button.set_tooltip_text(Some(&self.name));
+        widgets.emoji_button.set_label(&self.emoji);
+        widgets.emoji_button.set_tooltip_text(Some(&self.name));
     }
 }
 
@@ -122,7 +119,7 @@ impl SimpleComponent for App {
             TypedGridView::new();
 
         // Add a filter and disable it
-        grid_view_wrapper.add_filter(|item| item.name  == "smile");
+        grid_view_wrapper.add_filter(|item| item.name == "smile");
         grid_view_wrapper.set_filter_status(0, false);
         grid_view_wrapper.append(MyGridItem::new("🍓", "strawberry"));
 
@@ -130,8 +127,6 @@ impl SimpleComponent for App {
             emoji_collection,
             grid_view_wrapper,
         };
-
-
 
         let my_view = &model.grid_view_wrapper.view;
 
