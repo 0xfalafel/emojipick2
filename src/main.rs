@@ -13,8 +13,8 @@ use categories::EmojiCollection;
 
 
 struct App {
-    emoji_collection: HashMap<String, Vec<Emoji>>,
-    grid_view_wrapper: TypedGridView<Emoji, gtk::SingleSelection>,
+    emoji_collection: FactoryVecDeque<EmojiCollection>,
+    // grid_view_wrapper: TypedGridView<Emoji, gtk::SingleSelection>,
 }
 
 #[derive(Debug)]
@@ -49,9 +49,9 @@ impl SimpleComponent for App {
                     set_vexpand: true,
 
                     #[local_ref]
-                    my_view -> gtk::GridView {
+                    emoji_collection_box -> gtk::Box {
                         set_orientation: gtk::Orientation::Vertical,
-                        set_max_columns: 10,
+                        // set_max_columns: 10,
                     }
                 }
             }
@@ -59,45 +59,40 @@ impl SimpleComponent for App {
     }
 
     fn init(
-        emoji_collection: Self::Init,
+        emojis_input: Self::Init,
         root: Self::Root,
         sender: ComponentSender<Self>,
     ) -> ComponentParts<Self> {
-        // Initialize the GridView wrapper
-        let mut grid_view_wrapper: TypedGridView<Emoji, gtk::SingleSelection> =
-            TypedGridView::new();
 
-        // Add a filter and disable it
-        grid_view_wrapper.add_filter(|item| item.name == "smile");
-        grid_view_wrapper.set_filter_status(0, false);
+        let emoji_collection = FactoryVecDeque::builder()
+            .launch_default()
+            .detach();
 
-        // Add the emojis to the GridView
-        for (_category, emojis) in &emoji_collection {
-            for emoji in emojis {
-                grid_view_wrapper.append(Emoji::new(&emoji.symbol, &emoji.name));
-            }
-        }
-        
-        let model = App {
+        let mut model = App {
             emoji_collection,
-            grid_view_wrapper,
         };
+    
+        // Print the emojis grouped by category
+        for (category, emojis) in emojis_input {
+            let mut collections = model.emoji_collection.guard();
+            collections.push_back((category, emojis));
+        }
 
-        let my_view = &model.grid_view_wrapper.view;
+        let emoji_collection_box = model.emoji_collection.widget();
 
         let widgets = view_output!();
 
         ComponentParts { model, widgets }
     }
 
-    fn update(&mut self, msg: Self::Input, _sender: ComponentSender<Self>) {
-        match msg {
-            Msg::OnlyShowEven(show_only_even) => {
-                // Disable or enable the first filter
-                self.grid_view_wrapper.set_filter_status(0, show_only_even);
-            }
-        }
-    }
+    // fn update(&mut self, msg: Self::Input, _sender: ComponentSender<Self>) {
+    //     match msg {
+    //         Msg::OnlyShowEven(show_only_even) => {
+    //             // Disable or enable the first filter
+    //             self.grid_view_wrapper.set_filter_status(0, show_only_even);
+    //         }
+    //     }
+    // }
 }
 
 fn main() {

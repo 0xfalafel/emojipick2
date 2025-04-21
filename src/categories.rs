@@ -44,7 +44,7 @@ impl FactoryComponent for EmojiCollection {
             set_margin_all: 5,
 
             gtk::Label {
-                set_label: "Hi mom!"
+                set_label: &self.category,
             },
 
             gtk::GridView {
