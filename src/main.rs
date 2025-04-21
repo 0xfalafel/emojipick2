@@ -1,6 +1,5 @@
 use gtk::prelude::*;
 use relm4::{
-    binding::{Binding, U8Binding},
     prelude::*,
     typed_view::grid::{RelmGridItem, TypedGridView},
 };
@@ -17,7 +16,6 @@ struct Emoji {
 struct MyGridItem {
     emoji: String,
     value: u8,
-    binding: U8Binding,
     name: String,
 }
 
@@ -26,7 +24,6 @@ impl MyGridItem {
         Self {
             emoji: emoji.to_owned(),
             value,
-            binding: U8Binding::new(0),
             name: String::from(emoji_name),
         }
     }
@@ -173,15 +170,6 @@ impl SimpleComponent for App {
                     self.grid_view_wrapper.append(MyGridItem::new(self.counter, "😄", "smile"));
                 }
 
-                // self.grid_view_wrapper
-                //     .iter()
-                //     .for_each(|row| println!("item {}", row.borrow().value));
-
-                // Count up the first item
-                let first_item = self.grid_view_wrapper.get(0).unwrap();
-                let first_binding = &mut first_item.borrow_mut().binding;
-                let mut guard = first_binding.guard();
-                *guard += 1;
             }
             Msg::OnlyShowEven(show_only_even) => {
                 // Disable or enable the first filter
