@@ -12,7 +12,7 @@ pub struct EmojiCollection {
     grid_view_wrapper: TypedGridView<Emoji, gtk::SingleSelection>,
 }
 
-#[relm4::component]
+#[relm4::component(pub)]
 impl SimpleComponent for EmojiCollection {
     type Init = (String, Vec<Emoji>);
     type Input = Msg;
@@ -39,7 +39,7 @@ impl SimpleComponent for EmojiCollection {
     fn init(
         emoji_collection: Self::Init,
         root: Self::Root,
-        sender: ComponentSender<Self>,
+        _sender: ComponentSender<Self>,
     ) -> ComponentParts<Self> {
         
         // Initialize the GridView wrapper
