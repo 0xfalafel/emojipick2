@@ -18,7 +18,7 @@ struct App {
 }
 
 #[derive(Debug)]
-enum Msg {
+pub enum Msg {
     OnlyShowEven(bool),
 }
 
