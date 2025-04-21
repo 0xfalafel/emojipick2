@@ -8,6 +8,10 @@ use std::collections::HashMap;
 mod emoji;
 use emoji::Emoji;
 
+mod categories;
+use categories::EmojiCollection;
+
+
 struct App {
     emoji_collection: HashMap<String, Vec<Emoji>>,
     grid_view_wrapper: TypedGridView<Emoji, gtk::SingleSelection>,
