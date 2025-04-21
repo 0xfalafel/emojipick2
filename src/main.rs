@@ -15,15 +15,13 @@ struct Emoji {
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct MyGridItem {
     emoji: String,
-    value: u8,
     name: String,
 }
 
 impl MyGridItem {
-    fn new(value: u8, emoji: &str, emoji_name: &str) -> Self {
+    fn new(emoji: &str, emoji_name: &str) -> Self {
         Self {
             emoji: emoji.to_owned(),
-            value,
             name: String::from(emoji_name),
         }
     }
@@ -69,19 +67,18 @@ impl RelmGridItem for MyGridItem {
 }
 
 struct App {
-    counter: u8,
+    emoji_collection: HashMap<String, Vec<Emoji>>,
     grid_view_wrapper: TypedGridView<MyGridItem, gtk::SingleSelection>,
 }
 
 #[derive(Debug)]
 enum Msg {
-    Append,
     OnlyShowEven(bool),
 }
 
 #[relm4::component]
 impl SimpleComponent for App {
-    type Init = u8;
+    type Init = HashMap<String, Vec<Emoji>>;
     type Input = Msg;
     type Output = ();
 
@@ -94,11 +91,6 @@ impl SimpleComponent for App {
                 set_orientation: gtk::Orientation::Vertical,
                 set_spacing: 5,
                 set_margin_all: 5,
-
-                gtk::Button {
-                    set_label: "Append 10 items",
-                    connect_clicked => Msg::Append,
-                },
 
                 gtk::ToggleButton {
                     set_label: "Only show even numbers",
@@ -121,7 +113,7 @@ impl SimpleComponent for App {
     }
 
     fn init(
-        counter: Self::Init,
+        emoji_collection: Self::Init,
         root: Self::Root,
         sender: ComponentSender<Self>,
     ) -> ComponentParts<Self> {
@@ -132,10 +124,10 @@ impl SimpleComponent for App {
         // Add a filter and disable it
         grid_view_wrapper.add_filter(|item| item.name  == "smile");
         grid_view_wrapper.set_filter_status(0, false);
-        grid_view_wrapper.append(MyGridItem::new(0, "🍓", "strawberry"));
+        grid_view_wrapper.append(MyGridItem::new("🍓", "strawberry"));
 
         let model = App {
-            counter,
+            emoji_collection,
             grid_view_wrapper,
         };
 
@@ -150,14 +142,6 @@ impl SimpleComponent for App {
 
     fn update(&mut self, msg: Self::Input, _sender: ComponentSender<Self>) {
         match msg {
-            Msg::Append => {
-                // Add 10 items
-                for _ in 0..10 {
-                    self.counter = self.counter.wrapping_add(1);
-                    self.grid_view_wrapper.append(MyGridItem::new(self.counter, "😄", "smile"));
-                }
-
-            }
             Msg::OnlyShowEven(show_only_even) => {
                 // Disable or enable the first filter
                 self.grid_view_wrapper.set_filter_status(0, show_only_even);
@@ -182,5 +166,5 @@ fn main() {
     }
 
     let app = RelmApp::new("relm4.example.typed-grid-view");
-    app.run::<App>(0);
+    app.run::<App>(categories);
 }
