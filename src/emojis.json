@@ -1,0 +1,20 @@
+{
+    "smiley_and_people": [
+        {
+            "symbol": "😄",
+            "name": "smile"
+        }
+    ],
+    "food_and_drink": [
+        {
+            "symbol": "🍓",
+            "name": "strawberry"
+        }
+    ],
+    "animal_and_nature": [
+        {
+            "symbol": "🐶",
+            "name": "dog"
+        }
+    ]
+}
