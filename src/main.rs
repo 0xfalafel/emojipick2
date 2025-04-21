@@ -47,7 +47,9 @@ impl RelmGridItem for MyGridItem {
                 set_spacing: 5,
 
                 #[name = "emoji_button"]
-                gtk::Button,
+                gtk::Button {
+                    add_css_class: "flat",
+                },
 
                 #[name = "label"]
                 gtk::Label,
