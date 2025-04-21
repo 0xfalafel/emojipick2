@@ -17,16 +17,11 @@ impl Emoji {
     }
 }
 
-#[derive(Debug)]
-pub struct Widgets {
-    emoji_button: gtk::Button,
-}
-
 impl RelmGridItem for Emoji {
     type Root = gtk::Box;
-    type Widgets = Widgets;
+    type Widgets = gtk::Button;
 
-    fn setup(_item: &gtk::ListItem) -> (gtk::Box, Widgets) {
+    fn setup(_item: &gtk::ListItem) -> (gtk::Box, gtk::Button) {
         relm4::view! {
             my_box = gtk::Box {
                 set_orientation: gtk::Orientation::Horizontal,
@@ -40,15 +35,11 @@ impl RelmGridItem for Emoji {
             }
         }
 
-        let widgets = Widgets {
-            emoji_button,
-        };
-
-        (my_box, widgets)
+        (my_box, emoji_button)
     }
 
-    fn bind(&mut self, widgets: &mut Self::Widgets, _root: &mut Self::Root) {
-        widgets.emoji_button.set_label(&self.symbol);
-        widgets.emoji_button.set_tooltip_text(Some(&self.name));
+    fn bind(&mut self, widget: &mut Self::Widgets, _root: &mut Self::Root) {
+        widget.set_label(&self.symbol);
+        widget.set_tooltip_text(Some(&self.name));
     }
 }
