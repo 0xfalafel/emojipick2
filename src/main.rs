@@ -6,23 +6,17 @@ use relm4::{
 use serde::Deserialize;
 use std::collections::HashMap;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct Emoji {
     symbol: String,
     name: String,
 }
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
-struct MyGridItem {
-    emoji: String,
-    name: String,
-}
-
-impl MyGridItem {
-    fn new(emoji: &str, emoji_name: &str) -> Self {
+impl Emoji {
+    fn new(symbol: &str, name: &str) -> Self {
         Self {
-            emoji: emoji.to_owned(),
-            name: emoji_name.to_owned(),
+            symbol: symbol.to_owned(),
+            name: name.to_owned(),
         }
     }
 }
@@ -32,7 +26,7 @@ struct Widgets {
     emoji_button: gtk::Button,
 }
 
-impl RelmGridItem for MyGridItem {
+impl RelmGridItem for Emoji {
     type Root = gtk::Box;
     type Widgets = Widgets;
 
@@ -58,14 +52,14 @@ impl RelmGridItem for MyGridItem {
     }
 
     fn bind(&mut self, widgets: &mut Self::Widgets, _root: &mut Self::Root) {
-        widgets.emoji_button.set_label(&self.emoji);
+        widgets.emoji_button.set_label(&self.symbol);
         widgets.emoji_button.set_tooltip_text(Some(&self.name));
     }
 }
 
 struct App {
     emoji_collection: HashMap<String, Vec<Emoji>>,
-    grid_view_wrapper: TypedGridView<MyGridItem, gtk::SingleSelection>,
+    grid_view_wrapper: TypedGridView<Emoji, gtk::SingleSelection>,
 }
 
 #[derive(Debug)]
@@ -115,7 +109,7 @@ impl SimpleComponent for App {
         sender: ComponentSender<Self>,
     ) -> ComponentParts<Self> {
         // Initialize the GridView wrapper
-        let mut grid_view_wrapper: TypedGridView<MyGridItem, gtk::SingleSelection> =
+        let mut grid_view_wrapper: TypedGridView<Emoji, gtk::SingleSelection> =
             TypedGridView::new();
 
         // Add a filter and disable it
@@ -125,7 +119,7 @@ impl SimpleComponent for App {
         // Add the emojis to the GridView
         for (_category, emojis) in &emoji_collection {
             for emoji in emojis {
-                grid_view_wrapper.append(MyGridItem::new(&emoji.symbol, &emoji.name));
+                grid_view_wrapper.append(Emoji::new(&emoji.symbol, &emoji.name));
             }
         }
         
