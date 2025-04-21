@@ -121,8 +121,14 @@ impl SimpleComponent for App {
         // Add a filter and disable it
         grid_view_wrapper.add_filter(|item| item.name == "smile");
         grid_view_wrapper.set_filter_status(0, false);
-        grid_view_wrapper.append(MyGridItem::new("🍓", "strawberry"));
 
+        // Add the emojis to the GridView
+        for (_category, emojis) in &emoji_collection {
+            for emoji in emojis {
+                grid_view_wrapper.append(MyGridItem::new(&emoji.symbol, &emoji.name));
+            }
+        }
+        
         let model = App {
             emoji_collection,
             grid_view_wrapper,
