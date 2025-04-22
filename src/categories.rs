@@ -42,8 +42,8 @@ impl FactoryComponent for EmojiCollection {
     ) -> Self::Widgets {
         let widgets = view_output!();
 
-        // Attach the GridView’s internal view to the container
-        widgets.emoji_container.set_child(Some(&self.grid_view.view));
+        // Append the GridView’s internal view to the container
+        widgets.emoji_container.append(&self.grid_view.view);
 
         widgets
     }
@@ -58,10 +58,12 @@ impl FactoryComponent for EmojiCollection {
                 set_label: &self.category,
             },
 
+
             #[name = "emoji_container"]
-            gtk::ScrolledWindow {
-                set_min_content_height: 200,
-                set_min_content_width: 300,
+            gtk::Box {
+                set_orientation: gtk::Orientation::Vertical,
+                // set_width_request: 300,
+                // set_height_request: 200,
             }
         }
     }
