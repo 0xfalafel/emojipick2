@@ -43,7 +43,7 @@ impl FactoryComponent for EmojiCollection {
         let widgets = view_output!();
 
         // Attach the GridView’s internal view to the container
-        widgets.emoji_container.set_child(Some(self.grid_view.view));
+        widgets.emoji_container.set_child(Some(&self.grid_view.view));
 
         widgets
     }
