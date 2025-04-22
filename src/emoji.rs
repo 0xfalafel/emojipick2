@@ -2,7 +2,7 @@ use gtk::prelude::*;
 use relm4::{prelude::*, typed_view::grid::RelmGridItem};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Deserialize, Debug, PartialEq, Eq, PartialOrd, Ord, Clone)]
 pub struct Emoji {
     pub symbol: String,
     pub name: String,

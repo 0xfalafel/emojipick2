@@ -1,4 +1,5 @@
 use gtk::prelude::*;
+use relm4::factory::FactoryView;
 use relm4::{
     prelude::*,
     typed_view::grid::TypedGridView,
@@ -24,17 +25,32 @@ impl FactoryComponent for EmojiCollection {
 
         let (category, emojis) = init;
 
-        let mut grid_view_wrapper: TypedGridView<Emoji, gtk::SingleSelection> = TypedGridView::new();
-        grid_view_wrapper.add_filter(|item| item.name == "smile");
-        grid_view_wrapper.set_filter_status(0, false);
-        for emoji in emojis {
-            grid_view_wrapper.append(Emoji::new(&emoji.symbol, &emoji.name));
-        }
-        
+        let grid_view_wrapper: TypedGridView<Emoji, gtk::SingleSelection> = TypedGridView::new();
+
         Self {
             category,
             grid_view_wrapper,
         }
+    }
+
+    fn init_widgets(
+        &mut self,
+        _index: &DynamicIndex,
+        root: Self::Root,
+        _returned_widget: &<Self::ParentWidget as FactoryView>::ReturnedWidget,
+        _sender: FactorySender<Self>,
+    ) -> Self::Widgets {
+        
+        // Use the macro to get access to named widgets
+        let widgets = view_output!();
+    
+        // Add example items to the grid
+        for i in 0..10 {
+            let label = gtk::Label::new(Some(&format!("Item {i}")));
+            widgets.emoji_grid.append(&label);
+        }
+    
+        widgets
     }
 
     view! {
@@ -47,6 +63,7 @@ impl FactoryComponent for EmojiCollection {
                 set_label: &self.category,
             },
 
+            #[name = "emoji_grid"]
             gtk::GridView {
                 set_orientation: gtk::Orientation::Vertical,
                 set_max_columns: 10,

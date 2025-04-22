@@ -1,10 +1,6 @@
 use gtk::prelude::*;
-use relm4::{
-    prelude::*,
-    typed_view::grid::TypedGridView,
-};
+use relm4::prelude::*;
 use std::collections::HashMap;
-
 mod emoji;
 use emoji::Emoji;
 
